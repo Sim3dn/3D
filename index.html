@@ -1,27 +1,82 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>&lt;model-viewer&gt; template</title>
-    <meta charset="utf-8">
-    <meta name="description" content="&lt;model-viewer&gt; template">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link type="text/css" href="./styles.css" rel="stylesheet"/>
-  </head>
-  <body>
-    <!-- <model-viewer> HTML element -->
-    <model-viewer src="Chair.glb" ar ar-modes="scene-viewer webxr quick-look" camera-controls poster="poster.webp" shadow-intensity="0.72" shadow-softness="0.91" exposure="1" min-camera-orbit="auto 80deg auto" max-camera-orbit="auto 80deg auto" camera-orbit="100deg 80deg 2.825m" field-of-view="30deg">
-      <div class="progress-bar hide" slot="progress-bar">
-          <div class="update-bar"></div>
-      </div>
-      <button slot="ar-button" id="ar-button">
-          View in your space
-      </button>
-      <div id="ar-prompt">
-          <img src="ar_hand_prompt.png">
-      </div>
-    </model-viewer>  
-    <script src="script.js"></script>
-    <!-- Loads <model-viewer> for browsers: -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <!-- Import the model-viewer component -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-  </body>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <model-viewer 
+        id="modelViewer"
+        src="https://sim3dn.github.io/3D/Chair.glb" 
+        ar 
+        ar-modes="scene-viewer webxr quick-look" 
+        camera-controls 
+        poster="https://sim3dn.github.io/3D/poster.webp" 
+        shadow-intensity="0.72" 
+        shadow-softness="0.91" 
+        exposure="1" 
+        min-camera-orbit="auto 80deg auto" 
+        max-camera-orbit="auto 80deg auto" 
+        camera-orbit="-337.8deg 80deg 2.77m" 
+        field-of-view="29.89deg" 
+        auto-rotate>
+
+        <div class="progress-bar hide" slot="progress-bar">
+            <div class="update-bar"></div>
+        </div>
+
+        <div class="controls">
+            <div>
+              <p>Diffuse</p>
+              <select id="diffuse">
+                <!-- Replace with your texture URLs -->
+                <option value="texture1.jpg">Texture 1</option>
+                <option value="texture2.jpg">Texture 2</option>
+              </select>
+            </div>
+        </div>
+
+        <button slot="ar-button" id="ar-button">
+            View in your space
+        </button>
+
+        <div id="ar-prompt">
+            <img src="https://modelviewer.dev/shared-assets/icons/hand.png" alt="AR Prompt" />
+        </div>
+    </model-viewer>
+
+    <script>
+        const modelViewer = document.getElementById('modelViewer');
+
+        modelViewer.addEventListener("load", () => {
+            const material = modelViewer.model.materials[0];
+
+            const createAndApplyTexture = async (channel, event) => {
+                const texture = await modelViewer.createTexture(event.target.value);
+                material[channel].setTexture(texture);
+            }
+
+            document.querySelector('#diffuse').addEventListener('input', (event) => {
+                createAndApplyTexture('baseColorTexture', event);
+            });
+        });
+    </script>
+</body>
 </html>
