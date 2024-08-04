@@ -33,8 +33,8 @@
         ar-modes="scene-viewer webxr quick-look"
         camera-controls 
         poster="https://sim3dn.github.io/3D/poster.webp"
-        shadow-intensity="0.72" 
-        shadow-softness="0.91" 
+        shadow-intensity="1"
+        shadow-softness="0.2" 
         exposure="1" 
         min-camera-orbit="auto 80deg auto" 
         max-camera-orbit="auto 80deg auto" 
@@ -50,7 +50,7 @@
         </div>
         <div>
             <label for="frameColorPicker">Choose Frame Color:</label>
-            <input type="color" id="frameColorPicker" value="#ffffff">
+            <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
         </div>
         <div>
             <label for="topTexture">Choose Desk Top Texture:</label>
@@ -78,6 +78,13 @@
             const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
             const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
 
+            const updateFrameColor = (color) => {
+                const rgb = hexToRgb(color);
+                if (deskFrameMaterial) {
+                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            };
+
             document.getElementById('topColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
                 const rgb = hexToRgb(color);
@@ -88,15 +95,12 @@
 
             document.getElementById('frameColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
-                const rgb = hexToRgb(color);
-                if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
-                }
+                updateFrameColor(color);
             });
 
             document.getElementById('topTexture').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
-                const texture = await modelViewer.createTexture("https://sim3dn.github.io/3D/textures/${textureUrl}");
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
                 if (deskTopMaterial) {
                     deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
@@ -104,11 +108,12 @@
 
             document.getElementById('frameFinish').addEventListener('change', (event) => {
                 const color = event.target.value;
-                const rgb = hexToRgb(color);
-                if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
-                }
+                document.getElementById('frameColorPicker').value = color; // Update the color picker value
+                updateFrameColor(color);
             });
+
+            // Initialize the frame color to the default black
+            updateFrameColor('#000000');
 
             // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
