@@ -60,11 +60,11 @@
             </select>
         </div>
         <div>
-            <label for="frameTexture">Choose Frame Texture:</label>
-            <select id="frameTexture">
-                <option value="black.jpg">Black</option>
-                <option value="white.jpg">White</option>
-                <option value="silver.jpg">Silver</option>
+            <label for="frameFinish">Choose Frame Finish:</label>
+            <select id="frameFinish">
+                <option value="#000000">Black</option>
+                <option value="#ffffff">White</option>
+                <option value="#c0c0c0">Silver</option>
             </select>
         </div>
     </div>
@@ -102,11 +102,11 @@
                 }
             });
 
-            document.getElementById('frameTexture').addEventListener('change', async (event) => {
-                const textureUrl = event.target.value;
-                const texture = await modelViewer.createTexture(`path/to/your/textures/${textureUrl}`);
+            document.getElementById('frameFinish').addEventListener('change', (event) => {
+                const color = event.target.value;
+                const rgb = hexToRgb(color);
                 if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
                 }
             });
 
