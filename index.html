@@ -9,7 +9,6 @@
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -18,21 +17,18 @@
         }
         model-viewer {
             width: 100%;
-            height: 80%;
-        }
-        .controls {
-            margin-top: 20px;
+            height: 100%;
         }
     </style>
 </head>
 <body>
     <model-viewer 
         id="modelViewer"
-        src="https://sim3dn.github.io/3D/Desk.glb"
+        src="https://sim3dn.github.io/3D/Chair.glb" 
         ar 
         ar-modes="scene-viewer webxr quick-look" 
         camera-controls 
-        poster="https://sim3dn.github.io/3D/poster.webp"
+        poster="https://sim3dn.github.io/3D/poster.webp" 
         shadow-intensity="0.72" 
         shadow-softness="0.91" 
         exposure="1" 
@@ -41,53 +37,36 @@
         camera-orbit="-337.8deg 80deg 2.77m" 
         field-of-view="29.89deg" 
         auto-rotate>
-    </model-viewer>
     
     <div class="controls">
         <div>
-            <label for="colorPicker">Choose Desk Top Color:</label>
-            <input type="color" id="colorPicker" value="#ffffff">
+            <p>Diffuse</p>
+            <select id="diffuse">
+                <option value="texture1.jpg">Texture Test 1</option>
+                <option value="texture2.jpg">Texture Test 2</option>
+            </select>
         </div>
     </div>
+</model-viewer>
+<script type="module">
+    const modelViewer = document.getElementById('modelViewer');
 
-    <script type="module">
-        const modelViewer = document.getElementById('modelViewer');
+    modelViewer.addEventListener("load", () => {
+        const material = modelViewer.model.materials.find(mat => mat.name === 'Sofa small.002');
 
-        modelViewer.addEventListener("load", () => {
-            // Wait for the model to fully load
-            const intervalId = setInterval(() => {
-                if (modelViewer.model && modelViewer.model.materials) {
-                    clearInterval(intervalId);
-
-                    const material = modelViewer.model.materials.find(mat => {
-                        console.log(mat.name); // Debugging: Log material names
-                        return mat.name === 'DeskTopMaterial';  // Ensure this matches the name in Blender
-                    });
-
-                    if (material) {
-                        console.log('Material found:', material);
-
-                        document.getElementById('colorPicker').addEventListener('input', (event) => {
-                            const color = event.target.value;
-                            const rgb = hexToRgb(color);
-                            console.log('Selected color:', rgb); // Debugging: Log selected color
-                            material.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
-                        });
-                    } else {
-                        console.error('Material not found');
-                    }
-                }
-            }, 100);
-        });
-
-        // Helper function to convert hex color to RGB
-        function hexToRgb(hex) {
-            const bigint = parseInt(hex.replace('#', ''), 16);
-            const r = (bigint >> 16) & 255;
-            const g = (bigint >> 8) & 255;
-            const b = (bigint & 255);
-            return { r, g, b };
+        const createAndApplyTexture = async (channel, event) => {
+            const texture = await modelViewer.createTexture(event.target.value);
+            if (channel.includes('base') || channel.includes('metallic')) {
+                material.pbrMetallicRoughness[channel].setTexture(texture);
+            } else {
+                material[channel].setTexture(texture);
+            }
         }
-    </script>
+
+        document.querySelector('#diffuse').addEventListener('input', (event) => {
+            createAndApplyTexture('baseColorTexture', event);
+        });
+    });
+</script>
 </body>
 </html>
