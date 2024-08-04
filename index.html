@@ -49,8 +49,23 @@
             <input type="color" id="topColorPicker" value="#ffffff">
         </div>
         <div>
-            <label for="frameColorPicker">Choose Frame Finish Color:</label>
+            <label for="frameColorPicker">Choose Frame Color:</label>
             <input type="color" id="frameColorPicker" value="#ffffff">
+        </div>
+        <div>
+            <label for="topTexture">Choose Desk Top Texture:</label>
+            <select id="topTexture">
+                <option value="strata-oak.jpg">Strata Oak MFC</option>
+                <option value="urban-maple.jpg">Urban Maple MFC</option>
+            </select>
+        </div>
+        <div>
+            <label for="frameTexture">Choose Frame Texture:</label>
+            <select id="frameTexture">
+                <option value="black.jpg">Black</option>
+                <option value="white.jpg">White</option>
+                <option value="silver.jpg">Silver</option>
+            </select>
         </div>
     </div>
 
@@ -61,7 +76,7 @@
             const materials = modelViewer.model.materials;
 
             const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
-            const frameFinishMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
 
             document.getElementById('topColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
@@ -74,8 +89,24 @@
             document.getElementById('frameColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
                 const rgb = hexToRgb(color);
-                if (frameFinishMaterial) {
-                    frameFinishMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (deskFrameMaterial) {
+                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            });
+
+            document.getElementById('topTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`path/to/your/textures/${textureUrl}`);
+                if (deskTopMaterial) {
+                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
+            });
+
+            document.getElementById('frameTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`path/to/your/textures/${textureUrl}`);
+                if (deskFrameMaterial) {
+                    deskFrameMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
             });
 
