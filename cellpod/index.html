@@ -31,21 +31,24 @@
 <body>
     <model-viewer 
     id="modelViewer"
-    src="https://sim3dn.github.io/3D/cellpod/Cell Pod 1.glb"
+    src="https://sim3dn.github.io/3D/desk/Desk.glb"
     ar 
     ar-modes="scene-viewer webxr quick-look"
     camera-controls 
-    poster="https://sim3dn.github.io/3D/cellpod/poster.webp"
-    shadow-intensity="1"
-    shadow-softness="0.2" 
+    poster="https://sim3dn.github.io/3D/desk/poster.webp"
+    shadow-intensity="2"
+    shadow-softness="0.4" 
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
     camera-orbit="-337.8deg 80deg 2.77m" 
     field-of-view="29.89deg" 
     auto-rotate
-    environment-image="neutral"> <!-- Already added correctly -->
+    environment-image="neutral"
+    ground-color="#e0e0e0" 
+    ground-shadow-height="0.01m"
 </model-viewer>
+
 
     
     <div class="controls">
