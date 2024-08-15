@@ -23,6 +23,9 @@
         .controls {
             margin-top: 20px;
         }
+        .controls div {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -40,31 +43,47 @@
         max-camera-orbit="auto 80deg auto" 
         camera-orbit="-337.8deg 80deg 2.77m" 
         field-of-view="29.89deg" 
-        auto-rotate>
+        auto-rotate
+        environment-image="neutral"  <!-- Add this line -->
+        shadow-intensity="1">
     </model-viewer>
     
     <div class="controls">
-        <div>
-            <label for="topColorPicker">Choose Desk Top Color:</label>
-            <input type="color" id="topColorPicker" value="#ffffff">
-        </div>
+        <!-- Frame Color -->
         <div>
             <label for="frameColorPicker">Choose Frame Color:</label>
             <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
         </div>
+
+        <!-- Carpet Color -->
         <div>
-            <label for="topTexture">Choose Desk Top Texture:</label>
-            <select id="topTexture">
-                <option value="strataoak.jpg">Strata Oak MFC</option>
-                <option value="urbanmaple.jpg">Urban Maple MFC</option>
+            <label for="carpetColorPicker">Choose Carpet Color:</label>
+            <input type="color" id="carpetColorPicker" value="#ffffff"> <!-- Default white color -->
+        </div>
+
+        <!-- Inner Panel Fabric Color -->
+        <div>
+            <label for="innerPanelColorPicker">Choose Inner Panel Fabric Color:</label>
+            <input type="color" id="innerPanelColorPicker" value="#d2d2d2"> <!-- Default gray color -->
+        </div>
+
+        <!-- Carpet Finish -->
+        <div>
+            <label for="carpetFinish">Choose Carpet Finish:</label>
+            <select id="carpetFinish">
+                <option value="#ffffff">White</option>
+                <option value="#c0c0c0">Light Gray</option>
+                <option value="#333333">Dark Gray</option>
             </select>
         </div>
+
+        <!-- Inner Panel Fabric -->
         <div>
-            <label for="frameFinish">Choose Frame Finish:</label>
-            <select id="frameFinish">
-                <option value="#000000">Black</option>
-                <option value="#ffffff">White</option>
-                <option value="#c0c0c0">Silver</option>
+            <label for="innerPanelFabric">Choose Inner Panel Fabric:</label>
+            <select id="innerPanelFabric">
+                <option value="#d2d2d2">Default Gray</option>
+                <option value="#ff0000">Red</option>
+                <option value="#0000ff">Blue</option>
             </select>
         </div>
     </div>
@@ -75,45 +94,48 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
-            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+            const frameMaterial = materials.find(mat => mat.name === 'Hideaway-Black');
+            const carpetMaterial = materials.find(mat => mat.name === 'Hideaway Carpet 2 - Milliken Nordic Stories Spiritland');
+            const innerPanelMaterial = materials.find(mat => mat.name === 'Camira Blazer Silverdale CUZ28');
 
-            const updateFrameColor = (color) => {
+            // Update material colors
+            const updateMaterialColor = (material, color) => {
                 const rgb = hexToRgb(color);
-                if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (material) {
+                    material.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
                 }
             };
 
-            document.getElementById('topColorPicker').addEventListener('input', (event) => {
-                const color = event.target.value;
-                const rgb = hexToRgb(color);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
-                }
-            });
-
+            // Color Picker Listeners
             document.getElementById('frameColorPicker').addEventListener('input', (event) => {
+                updateMaterialColor(frameMaterial, event.target.value);
+            });
+
+            document.getElementById('carpetColorPicker').addEventListener('input', (event) => {
+                updateMaterialColor(carpetMaterial, event.target.value);
+            });
+
+            document.getElementById('innerPanelColorPicker').addEventListener('input', (event) => {
+                updateMaterialColor(innerPanelMaterial, event.target.value);
+            });
+
+            // Finish Selectors Listeners
+            document.getElementById('carpetFinish').addEventListener('change', (event) => {
                 const color = event.target.value;
-                updateFrameColor(color);
+                document.getElementById('carpetColorPicker').value = color; // Update the color picker value
+                updateMaterialColor(carpetMaterial, color);
             });
 
-            document.getElementById('topTexture').addEventListener('change', async (event) => {
-                const textureUrl = event.target.value;
-                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-                }
-            });
-
-            document.getElementById('frameFinish').addEventListener('change', (event) => {
+            document.getElementById('innerPanelFabric').addEventListener('change', (event) => {
                 const color = event.target.value;
-                document.getElementById('frameColorPicker').value = color; // Update the color picker value
-                updateFrameColor(color);
+                document.getElementById('innerPanelColorPicker').value = color; // Update the color picker value
+                updateMaterialColor(innerPanelMaterial, color);
             });
 
-            // Initialize the frame color to the default black
-            updateFrameColor('#000000');
+            // Initialize with default colors
+            updateMaterialColor(frameMaterial, '#000000'); // Black
+            updateMaterialColor(carpetMaterial, '#ffffff'); // White
+            updateMaterialColor(innerPanelMaterial, '#d2d2d2'); // Gray
 
             // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
