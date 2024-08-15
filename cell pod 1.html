@@ -1,145 +1,129 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2563.1">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <!-- Import the model-viewer component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        model-viewer {
+            width: 100%;
+            height: 80%;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;3D Model Viewer&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Import the model-viewer component --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f0f0f0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>model-viewer {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 80%;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.controls {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;model-viewer<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>id="modelViewer"</p>
-<p class="p1"><span class="Apple-converted-space">        </span>src="https://sim3dn.github.io/3D/Cell Pod 1.glb"</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ar<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>ar-modes="scene-viewer webxr quick-look"</p>
-<p class="p1"><span class="Apple-converted-space">        </span>camera-controls<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>poster="https://sim3dn.github.io/3D/poster2.webp"</p>
-<p class="p1"><span class="Apple-converted-space">        </span>shadow-intensity="1"</p>
-<p class="p1"><span class="Apple-converted-space">        </span>shadow-softness="0.2"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>exposure="1"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>min-camera-orbit="auto 80deg auto"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>max-camera-orbit="auto 80deg auto"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>camera-orbit="-337.8deg 80deg 2.77m"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>field-of-view="29.89deg"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>auto-rotate&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/model-viewer&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="controls"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="topColorPicker"&gt;Choose Desk Top Color:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="color" id="topColorPicker" value="#ffffff"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="frameColorPicker"&gt;Choose Frame Color:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="color" id="frameColorPicker" value="#000000"&gt; &lt;!-- Default black color --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="topTexture"&gt;Choose Desk Top Texture:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;select id="topTexture"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="strataoak.jpg"&gt;Strata Oak MFC&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="urbanmaple.jpg"&gt;Urban Maple MFC&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;label for="frameFinish"&gt;Choose Frame Finish:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;select id="frameFinish"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="#000000"&gt;Black&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="#ffffff"&gt;White&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="#c0c0c0"&gt;Silver&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="module"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const modelViewer = document.getElementById('modelViewer');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>modelViewer.addEventListener("load", () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const materials = modelViewer.model.materials;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const deskTopMaterial = materials.find(mat =&gt; mat.name === 'DeskTopMaterial');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const deskFrameMaterial = materials.find(mat =&gt; mat.name === 'DeskFrameMaterials');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const updateFrameColor = (color) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const rgb = hexToRgb(color);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (deskFrameMaterial) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('topColorPicker').addEventListener('input', (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const color = event.target.value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const rgb = hexToRgb(color);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (deskTopMaterial) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('frameColorPicker').addEventListener('input', (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const color = event.target.value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>updateFrameColor(color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('topTexture').addEventListener('change', async (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const textureUrl = event.target.value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (deskTopMaterial) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('frameFinish').addEventListener('change', (event) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const color = event.target.value;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('frameColorPicker').value = color; // Update the color picker value</p>
-<p class="p1"><span class="Apple-converted-space">                </span>updateFrameColor(color);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Initialize the frame color to the default black</p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateFrameColor('#000000');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Helper function to convert hex color to RGB</p>
-<p class="p1"><span class="Apple-converted-space">            </span>function hexToRgb(hex) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const bigint = parseInt(hex.replace('#', ''), 16);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const r = (bigint &gt;&gt; 16) &amp; 255;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const g = (bigint &gt;&gt; 8) &amp; 255;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const b = (bigint &amp; 255);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return { r, g, b };</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <model-viewer 
+        id="modelViewer"
+        src="https://sim3dn.github.io/3D/Cell Pod 1.glb"
+        ar 
+        ar-modes="scene-viewer webxr quick-look"
+        camera-controls 
+        poster="https://sim3dn.github.io/3D/poster2.webp"
+        shadow-intensity="1"
+        shadow-softness="0.2" 
+        exposure="1" 
+        min-camera-orbit="auto 80deg auto" 
+        max-camera-orbit="auto 80deg auto" 
+        camera-orbit="-337.8deg 80deg 2.77m" 
+        field-of-view="29.89deg" 
+        auto-rotate>
+    </model-viewer>
+    
+    <div class="controls">
+        <div>
+            <label for="topColorPicker">Choose Desk Top Color:</label>
+            <input type="color" id="topColorPicker" value="#ffffff">
+        </div>
+        <div>
+            <label for="frameColorPicker">Choose Frame Color:</label>
+            <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
+        </div>
+        <div>
+            <label for="topTexture">Choose Desk Top Texture:</label>
+            <select id="topTexture">
+                <option value="strataoak.jpg">Strata Oak MFC</option>
+                <option value="urbanmaple.jpg">Urban Maple MFC</option>
+            </select>
+        </div>
+        <div>
+            <label for="frameFinish">Choose Frame Finish:</label>
+            <select id="frameFinish">
+                <option value="#000000">Black</option>
+                <option value="#ffffff">White</option>
+                <option value="#c0c0c0">Silver</option>
+            </select>
+        </div>
+    </div>
+
+    <script type="module">
+        const modelViewer = document.getElementById('modelViewer');
+
+        modelViewer.addEventListener("load", () => {
+            const materials = modelViewer.model.materials;
+
+            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
+            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+
+            const updateFrameColor = (color) => {
+                const rgb = hexToRgb(color);
+                if (deskFrameMaterial) {
+                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            };
+
+            document.getElementById('topColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                const rgb = hexToRgb(color);
+                if (deskTopMaterial) {
+                    deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            });
+
+            document.getElementById('frameColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                updateFrameColor(color);
+            });
+
+            document.getElementById('topTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
+                if (deskTopMaterial) {
+                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
+            });
+
+            document.getElementById('frameFinish').addEventListener('change', (event) => {
+                const color = event.target.value;
+                document.getElementById('frameColorPicker').value = color; // Update the color picker value
+                updateFrameColor(color);
+            });
+
+            // Initialize the frame color to the default black
+            updateFrameColor('#000000');
+
+            // Helper function to convert hex color to RGB
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.replace('#', ''), 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = (bigint & 255);
+                return { r, g, b };
+            }
+        });
+    </script>
 </body>
 </html>
