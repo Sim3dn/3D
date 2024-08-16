@@ -22,17 +22,14 @@
         }
         .controls {
             margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
             width: 80%;
-        }
-        .color-controls, .view-controls {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         .view-controls {
-            align-items: center;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -49,29 +46,39 @@
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
-    camera-orbit="0deg 80deg 6m"
-    field-of-view="29.89deg" 
-    environment-image="neutral" 
-    auto-rotate>
+    camera-orbit="0deg 85deg 6m" <!-- Adjusted for zooming out -->
+    field-of-view="35deg" <!-- Wider field of view -->
+    auto-rotate
+    environment-image="neutral">
 </model-viewer>
     
     <div class="controls">
-        <div class="color-controls">
-            <label for="topColorPicker">Choose Desk Top Color:</label>
-            <input type="color" id="topColorPicker" value="#ffffff">
-            <label for="frameColorPicker">Choose Frame Color:</label>
-            <input type="color" id="frameColorPicker" value="#000000">
-            <label for="topTexture">Choose Desk Top Texture:</label>
-            <select id="topTexture">
+        <div>
+            <label for="shellColorPicker">Choose Shell Color:</label>
+            <input type="color" id="shellColorPicker" value="#ffffff">
+        </div>
+        <div>
+            <label for="glassColorPicker">Choose Glass Color:</label>
+            <input type="color" id="glassColorPicker" value="#000000"> <!-- Default black color -->
+        </div>
+        <div>
+            <label for="shellTexture">Choose Shell Texture:</label>
+            <select id="shellTexture">
                 <option value="strataoak.jpg">Strata Oak MFC</option>
                 <option value="urbanmaple.jpg">Urban Maple MFC</option>
             </select>
-            <label for="frameFinish">Choose Frame Finish:</label>
-            <select id="frameFinish">
+        </div>
+        <div>
+            <label for="glassFinish">Choose Glass Finish:</label>
+            <select id="glassFinish">
                 <option value="#000000">Black</option>
                 <option value="#ffffff">White</option>
                 <option value="#c0c0c0">Silver</option>
             </select>
+        </div>
+        <div>
+            <input type="checkbox" id="toggleGlass" checked>
+            <label for="toggleGlass">Show Glass Panels</label>
         </div>
         <div class="view-controls">
             <button id="prevViewButton">Previous View</button>
@@ -84,14 +91,14 @@
 
         // Camera orbits for 8 predefined views
         const cameraOrbits = [
-            '0deg 80deg 5.27m',    // Front view
-            '45deg 80deg 5.27m',   // Front-Right corner view
-            '90deg 80deg 5.27m',   // Right view
-            '135deg 80deg 5.27m',  // Back-Right corner view
-            '180deg 80deg 5.27m',  // Back view
-            '225deg 80deg 5.27m',  // Back-Left corner view
-            '270deg 80deg 5.27m',  // Left view
-            '315deg 80deg 5.27m',  // Front-Left corner view
+            '0deg 85deg 6m',     // Front view
+            '45deg 85deg 6m',    // Front-Right corner view
+            '90deg 85deg 6m',    // Right view
+            '135deg 85deg 6m',   // Back-Right corner view
+            '180deg 85deg 6m',   // Back view
+            '225deg 85deg 6m',   // Back-Left corner view
+            '270deg 85deg 6m',   // Left view
+            '315deg 85deg 6m',   // Front-Left corner view
         ];
 
         let currentViewIndex = 0;
@@ -109,46 +116,55 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            // Desk materials
-            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
-            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
-            const glassMaterial = materials.find(mat => mat.name === 'Glass');
-            const updateFrameColor = (color) => {
+            // Adjust these names according to your GLB material names
+            const shellMaterial = materials.find(mat => mat.name === 'ShellMaterial');
+            const glassMaterial = materials.find(mat => mat.name === 'GlassMaterial');
+
+            const updateGlassColor = (color) => {
                 const rgb = hexToRgb(color);
-                if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (glassMaterial) {
+                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 0.3]); // 0.3 for transparency
                 }
             };
 
-            document.getElementById('topColorPicker').addEventListener('input', (event) => {
+            document.getElementById('shellColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
                 const rgb = hexToRgb(color);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
                 }
             });
 
-            document.getElementById('frameColorPicker').addEventListener('input', (event) => {
+            document.getElementById('glassColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
-                updateFrameColor(color);
+                updateGlassColor(color);
             });
 
-            document.getElementById('topTexture').addEventListener('change', async (event) => {
+            document.getElementById('shellTexture').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
                 const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
             });
 
-            document.getElementById('frameFinish').addEventListener('change', (event) => {
+            document.getElementById('glassFinish').addEventListener('change', (event) => {
                 const color = event.target.value;
-                document.getElementById('frameColorPicker').value = color;
-                updateFrameColor(color);
+                document.getElementById('glassColorPicker').value = color; // Update the color picker value
+                updateGlassColor(color);
             });
 
-            updateFrameColor('#000000');
+            document.getElementById('toggleGlass').addEventListener('change', (event) => {
+                const isChecked = event.target.checked;
+                if (glassMaterial) {
+                    glassMaterial.visible = isChecked;
+                }
+            });
 
+            // Initialize the glass color to the default black
+            updateGlassColor('#000000');
+
+            // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
                 const bigint = parseInt(hex.replace('#', ''), 16);
                 const r = (bigint >> 16) & 255;
