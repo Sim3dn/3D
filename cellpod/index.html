@@ -49,9 +49,9 @@
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
-    camera-orbit="0deg 80deg 5.27m"  <!-- Further increased distance by 1m -->
+    camera-orbit="0deg 80deg 6m"
     field-of-view="29.89deg" 
-    environment-image="neutral" <!-- Environment image should be properly set -->
+    environment-image="neutral" 
     auto-rotate>
 </model-viewer>
     
@@ -112,8 +112,7 @@
             // Desk materials
             const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
             const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
-            const glassMaterial = materials.find(mat => mat.name === 'GlassMaterial'); // Assuming the glass material is named "GlassMaterial"
-
+            const glassMaterial = materials.find(mat => mat.name === 'Glass');
             const updateFrameColor = (color) => {
                 const rgb = hexToRgb(color);
                 if (deskFrameMaterial) {
@@ -144,14 +143,12 @@
 
             document.getElementById('frameFinish').addEventListener('change', (event) => {
                 const color = event.target.value;
-                document.getElementById('frameColorPicker').value = color; // Update the color picker value
+                document.getElementById('frameColorPicker').value = color;
                 updateFrameColor(color);
             });
 
-            // Initialize the frame color to the default black
             updateFrameColor('#000000');
 
-            // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
                 const bigint = parseInt(hex.replace('#', ''), 16);
                 const r = (bigint >> 16) & 255;
