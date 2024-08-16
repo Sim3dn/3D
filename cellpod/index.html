@@ -22,21 +22,13 @@
         }
         .controls {
             margin-top: 20px;
-            width: 80%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .view-controls {
-            display: flex;
-            justify-content: space-between;
         }
     </style>
 </head>
 <body>
     <model-viewer 
     id="modelViewer"
-    src="https://sim3dn.github.io/3D/cellpod/Cell%20Pod%201.glb"
+    src="https://sim3dn.github.io/3D/cellpod/Cell Pod 1.glb"
     ar 
     ar-modes="scene-viewer webxr quick-look"
     camera-controls 
@@ -46,8 +38,8 @@
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
-    camera-orbit="0deg 85deg 6m" <!-- Adjusted for zooming out -->
-    field-of-view="35deg" <!-- Wider field of view -->
+    camera-orbit="-337.8deg 85deg 6m"
+    field-of-view="35deg"
     auto-rotate
     environment-image="neutral">
 </model-viewer>
@@ -59,7 +51,7 @@
         </div>
         <div>
             <label for="glassColorPicker">Choose Glass Color:</label>
-            <input type="color" id="glassColorPicker" value="#000000"> <!-- Default black color -->
+            <input type="color" id="glassColorPicker" value="#000000">
         </div>
         <div>
             <label for="shellTexture">Choose Shell Texture:</label>
@@ -80,38 +72,10 @@
             <input type="checkbox" id="toggleGlass" checked>
             <label for="toggleGlass">Show Glass Panels</label>
         </div>
-        <div class="view-controls">
-            <button id="prevViewButton">Previous View</button>
-            <button id="nextViewButton">Next View</button>
-        </div>
     </div>
 
     <script type="module">
         const modelViewer = document.getElementById('modelViewer');
-
-        // Camera orbits for 8 predefined views
-        const cameraOrbits = [
-            '0deg 85deg 6m',     // Front view
-            '45deg 85deg 6m',    // Front-Right corner view
-            '90deg 85deg 6m',    // Right view
-            '135deg 85deg 6m',   // Back-Right corner view
-            '180deg 85deg 6m',   // Back view
-            '225deg 85deg 6m',   // Back-Left corner view
-            '270deg 85deg 6m',   // Left view
-            '315deg 85deg 6m',   // Front-Left corner view
-        ];
-
-        let currentViewIndex = 0;
-
-        document.getElementById('nextViewButton').addEventListener('click', () => {
-            currentViewIndex = (currentViewIndex + 1) % cameraOrbits.length;
-            modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
-        });
-
-        document.getElementById('prevViewButton').addEventListener('click', () => {
-            currentViewIndex = (currentViewIndex - 1 + cameraOrbits.length) % cameraOrbits.length;
-            modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
-        });
 
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
