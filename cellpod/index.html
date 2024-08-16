@@ -5,7 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Model Viewer</title>
     <!-- Import the model-viewer component -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script type="module">
+    const modelViewer = document.getElementById('modelViewer');
+
+    modelViewer.addEventListener("load", () => {
+        const materials = modelViewer.model.materials;
+
+        // Identify the glass material
+        const glassMaterial = materials.find(mat => mat.name === 'glass');
+
+        if (glassMaterial) {
+            // Set the glass-like properties
+            glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]);  // White color with high transparency
+            glassMaterial.pbrMetallicRoughness.metallicFactor = 0.1;               // Slightly metallic
+            glassMaterial.pbrMetallicRoughness.roughnessFactor = 0.05;             // Low roughness for a shiny, clear surface
+
+            // Set reflectivity (optional, depends on model-viewer version and support)
+            if (glassMaterial.pbrMetallicRoughness.reflectivityFactor) {
+                glassMaterial.pbrMetallicRoughness.reflectivityFactor = 0.8;      // Increase reflectivity for a glassy look
+            }
+        }
+    });
+</script>
     <style>
         body {
             display: flex;
