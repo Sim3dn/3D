@@ -38,10 +38,10 @@
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
-    camera-orbit="-337.8deg 80deg 2.77m" 
-    field-of-view="29.89deg" 
+    camera-orbit="-337.8deg 85deg 3m" <!-- Adjusted for zooming out -->
+    field-of-view="35deg" <!-- Wider field of view -->
     auto-rotate
-    environment-image="neutral"> <!-- Add this line if you want a specific environment lighting -->
+    environment-image="neutral">
 </model-viewer>
     
     <div class="controls">
@@ -68,6 +68,10 @@
                 <option value="#c0c0c0">Silver</option>
             </select>
         </div>
+        <div>
+            <input type="checkbox" id="toggleGlass" checked>
+            <label for="toggleGlass">Show Glass Panels</label>
+        </div>
     </div>
 
     <script type="module">
@@ -77,8 +81,8 @@
             const materials = modelViewer.model.materials;
 
             // Adjust these names according to your GLB material names
-            const shellMaterial = materials.find(mat => mat.name === 'Hideaway-Black');
-            const glassMaterial = materials.find(mat => mat.name === 'Glass');
+            const shellMaterial = materials.find(mat => mat.name === 'ShellMaterial');
+            const glassMaterial = materials.find(mat => mat.name === 'GlassMaterial');
 
             const updateGlassColor = (color) => {
                 const rgb = hexToRgb(color);
@@ -112,6 +116,13 @@
                 const color = event.target.value;
                 document.getElementById('glassColorPicker').value = color; // Update the color picker value
                 updateGlassColor(color);
+            });
+
+            document.getElementById('toggleGlass').addEventListener('change', (event) => {
+                const isChecked = event.target.checked;
+                if (glassMaterial) {
+                    glassMaterial.visible = isChecked;
+                }
             });
 
             // Initialize the glass color to the default black
