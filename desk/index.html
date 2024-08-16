@@ -22,6 +22,17 @@
         }
         .controls {
             margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+        }
+        .color-controls, .view-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .view-controls {
+            align-items: center;
         }
     </style>
 </head>
@@ -38,26 +49,59 @@
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
-    camera-orbit="-337.8deg 80deg 2.77m" 
+    camera-orbit="0deg 80deg 2.77m" 
     field-of-view="29.89deg"
     environment-image="neutral"> <!-- Disable auto-rotate -->
 </model-viewer>
     
     <div class="controls">
-        <button id="nextViewButton">Next View</button>
+        <!-- Color and Texture Controls -->
+        <div class="color-controls">
+            <div>
+                <label for="topColorPicker">Choose Desk Top Color:</label>
+                <input type="color" id="topColorPicker" value="#ffffff">
+            </div>
+            <div>
+                <label for="frameColorPicker">Choose Frame Color:</label>
+                <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
+            </div>
+            <div>
+                <label for="topTexture">Choose Desk Top Texture:</label>
+                <select id="topTexture">
+                    <option value="strataoak.jpg">Strata Oak MFC</option>
+                    <option value="urbanmaple.jpg">Urban Maple MFC</option>
+                </select>
+            </div>
+            <div>
+                <label for="frameFinish">Choose Frame Finish:</label>
+                <select id="frameFinish">
+                    <option value="#000000">Black</option>
+                    <option value="#ffffff">White</option>
+                    <option value="#c0c0c0">Silver</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- View Controls -->
+        <div class="view-controls">
+            <button id="prevViewButton">Previous View</button>
+            <button id="nextViewButton">Next View</button>
+        </div>
     </div>
 
     <script type="module">
         const modelViewer = document.getElementById('modelViewer');
+
+        // Camera orbits for 8 predefined views
         const cameraOrbits = [
-            '-337.8deg 80deg 2.77m', // Front-Left
-            '-292.8deg 80deg 2.77m', // Front
-            '-247.8deg 80deg 2.77m', // Front-Right
-            '-202.8deg 80deg 2.77m', // Right
-            '-157.8deg 80deg 2.77m', // Back-Right
-            '-112.8deg 80deg 2.77m', // Back
-            '-67.8deg 80deg 2.77m',  // Back-Left
-            '-22.8deg 80deg 2.77m',  // Left
+            '0deg 80deg 2.77m',    // Front view
+            '45deg 80deg 2.77m',   // Front-Right corner view
+            '90deg 80deg 2.77m',   // Right view
+            '135deg 80deg 2.77m',  // Back-Right corner view
+            '180deg 80deg 2.77m',  // Back view
+            '225deg 80deg 2.77m',  // Back-Left corner view
+            '270deg 80deg 2.77m',  // Left view
+            '315deg 80deg 2.77m',  // Front-Left corner view
         ];
 
         let currentViewIndex = 0;
@@ -67,9 +111,68 @@
             modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
         });
 
-        modelViewer.addEventListener("load", () => {
-            // Set the initial view
+        document.getElementById('prevViewButton').addEventListener('click', () => {
+            currentViewIndex = (currentViewIndex - 1 + cameraOrbits.length) % cameraOrbits.length;
             modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
+        });
+
+        modelViewer.addEventListener("load", () => {
+            // Set the initial view to the front view
+            modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
+        });
+
+        // Existing functionality for color and texture changes
+        modelViewer.addEventListener("load", () => {
+            const materials = modelViewer.model.materials;
+
+            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
+            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+
+            const updateFrameColor = (color) => {
+                const rgb = hexToRgb(color);
+                if (deskFrameMaterial) {
+                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            };
+
+            document.getElementById('topColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                const rgb = hexToRgb(color);
+                if (deskTopMaterial) {
+                    deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            });
+
+            document.getElementById('frameColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                updateFrameColor(color);
+            });
+
+            document.getElementById('topTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
+                if (deskTopMaterial) {
+                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
+            });
+
+            document.getElementById('frameFinish').addEventListener('change', (event) => {
+                const color = event.target.value;
+                document.getElementById('frameColorPicker').value = color; // Update the color picker value
+                updateFrameColor(color);
+            });
+
+            // Initialize the frame color to the default black
+            updateFrameColor('#000000');
+
+            // Helper function to convert hex color to RGB
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.replace('#', ''), 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = (bigint & 255);
+                return { r, g, b };
+            }
         });
     </script>
 </body>
