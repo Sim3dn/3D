@@ -3,30 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Viewer</title>
+    <title>3D Model Viewer - Cell Pod</title>
     <!-- Import the model-viewer component -->
-    <script type="module">
-    const modelViewer = document.getElementById('modelViewer');
-
-    modelViewer.addEventListener("load", () => {
-        const materials = modelViewer.model.materials;
-
-        // Identify the glass material
-        const glassMaterial = materials.find(mat => mat.name === 'Glass');
-
-        if (glassMaterial) {
-            // Set the glass-like properties
-            glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]);  // White color with high transparency
-            glassMaterial.pbrMetallicRoughness.metallicFactor = 0.1;               // Slightly metallic
-            glassMaterial.pbrMetallicRoughness.roughnessFactor = 0.05;             // Low roughness for a shiny, clear surface
-
-            // Set reflectivity (optional, depends on model-viewer version and support)
-            if (glassMaterial.pbrMetallicRoughness.reflectivityFactor) {
-                glassMaterial.pbrMetallicRoughness.reflectivityFactor = 0.8;      // Increase reflectivity for a glassy look
-            }
-        }
-    });
-</script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
         body {
             display: flex;
@@ -44,9 +23,6 @@
         .controls {
             margin-top: 20px;
         }
-        .controls div {
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -57,57 +33,39 @@
     ar-modes="scene-viewer webxr quick-look"
     camera-controls 
     poster="https://sim3dn.github.io/3D/cellpod/poster.webp"
-    shadow-intensity="2"
-    shadow-softness="0.4" 
+    shadow-intensity="1"
+    shadow-softness="0.2" 
     exposure="1" 
     min-camera-orbit="auto 80deg auto" 
     max-camera-orbit="auto 80deg auto" 
     camera-orbit="-337.8deg 80deg 2.77m" 
     field-of-view="29.89deg" 
     auto-rotate
-    environment-image="neutral"
-    ground-color="#e0e0e0" 
-    ground-shadow-height="0.01m"
+    environment-image="neutral"> <!-- Add this line if you want a specific environment lighting -->
 </model-viewer>
-
-
     
     <div class="controls">
-        <!-- Frame Color -->
         <div>
-            <label for="frameColorPicker">Choose Frame Color:</label>
-            <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
+            <label for="shellColorPicker">Choose Shell Color:</label>
+            <input type="color" id="shellColorPicker" value="#ffffff">
         </div>
-
-        <!-- Carpet Color -->
         <div>
-            <label for="carpetColorPicker">Choose Carpet Color:</label>
-            <input type="color" id="carpetColorPicker" value="#ffffff"> <!-- Default white color -->
+            <label for="glassColorPicker">Choose Glass Color:</label>
+            <input type="color" id="glassColorPicker" value="#000000"> <!-- Default black color -->
         </div>
-
-        <!-- Inner Panel Fabric Color -->
         <div>
-            <label for="innerPanelColorPicker">Choose Inner Panel Fabric Color:</label>
-            <input type="color" id="innerPanelColorPicker" value="#d2d2d2"> <!-- Default gray color -->
-        </div>
-
-        <!-- Carpet Finish -->
-        <div>
-            <label for="carpetFinish">Choose Carpet Finish:</label>
-            <select id="carpetFinish">
-                <option value="#ffffff">White</option>
-                <option value="#c0c0c0">Light Gray</option>
-                <option value="#333333">Dark Gray</option>
+            <label for="shellTexture">Choose Shell Texture:</label>
+            <select id="shellTexture">
+                <option value="strataoak.jpg">Strata Oak MFC</option>
+                <option value="urbanmaple.jpg">Urban Maple MFC</option>
             </select>
         </div>
-
-        <!-- Inner Panel Fabric -->
         <div>
-            <label for="innerPanelFabric">Choose Inner Panel Fabric:</label>
-            <select id="innerPanelFabric">
-                <option value="#d2d2d2">Default Gray</option>
-                <option value="#ff0000">Red</option>
-                <option value="#0000ff">Blue</option>
+            <label for="glassFinish">Choose Glass Finish:</label>
+            <select id="glassFinish">
+                <option value="#000000">Black</option>
+                <option value="#ffffff">White</option>
+                <option value="#c0c0c0">Silver</option>
             </select>
         </div>
     </div>
@@ -118,48 +76,46 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            const frameMaterial = materials.find(mat => mat.name === 'Hideaway-Black');
-            const carpetMaterial = materials.find(mat => mat.name === 'Hideaway Carpet 2 - Milliken Nordic Stories Spiritland');
-            const innerPanelMaterial = materials.find(mat => mat.name === 'Camira Blazer Silverdale CUZ28');
+            // Adjust these names according to your GLB material names
+            const shellMaterial = materials.find(mat => mat.name === 'ShellMaterial');
+            const glassMaterial = materials.find(mat => mat.name === 'GlassMaterial');
 
-            // Update material colors
-            const updateMaterialColor = (material, color) => {
+            const updateGlassColor = (color) => {
                 const rgb = hexToRgb(color);
-                if (material) {
-                    material.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (glassMaterial) {
+                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 0.3]); // 0.3 for transparency
                 }
             };
 
-            // Color Picker Listeners
-            document.getElementById('frameColorPicker').addEventListener('input', (event) => {
-                updateMaterialColor(frameMaterial, event.target.value);
-            });
-
-            document.getElementById('carpetColorPicker').addEventListener('input', (event) => {
-                updateMaterialColor(carpetMaterial, event.target.value);
-            });
-
-            document.getElementById('innerPanelColorPicker').addEventListener('input', (event) => {
-                updateMaterialColor(innerPanelMaterial, event.target.value);
-            });
-
-            // Finish Selectors Listeners
-            document.getElementById('carpetFinish').addEventListener('change', (event) => {
+            document.getElementById('shellColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
-                document.getElementById('carpetColorPicker').value = color; // Update the color picker value
-                updateMaterialColor(carpetMaterial, color);
+                const rgb = hexToRgb(color);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
             });
 
-            document.getElementById('innerPanelFabric').addEventListener('change', (event) => {
+            document.getElementById('glassColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
-                document.getElementById('innerPanelColorPicker').value = color; // Update the color picker value
-                updateMaterialColor(innerPanelMaterial, color);
+                updateGlassColor(color);
             });
 
-            // Initialize with default colors
-            updateMaterialColor(frameMaterial, '#000000'); // Black
-            updateMaterialColor(carpetMaterial, '#ffffff'); // White
-            updateMaterialColor(innerPanelMaterial, '#d2d2d2'); // Gray
+            document.getElementById('shellTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
+            });
+
+            document.getElementById('glassFinish').addEventListener('change', (event) => {
+                const color = event.target.value;
+                document.getElementById('glassColorPicker').value = color; // Update the color picker value
+                updateGlassColor(color);
+            });
+
+            // Initialize the glass color to the default black
+            updateGlassColor('#000000');
 
             // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
