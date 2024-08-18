@@ -45,7 +45,7 @@
     
     <div class="controls">
         <div>
-            <label for="topColorPicker">Choose Desk Top Color:</label>
+            <label for="topColorPicker">Choose Chair Top Color:</label>
             <input type="color" id="topColorPicker" value="#ffffff">
         </div>
         <div>
@@ -53,10 +53,10 @@
             <input type="color" id="frameColorPicker" value="#000000"> <!-- Default black color -->
         </div>
         <div>
-            <label for="topTexture">Choose Desk Top Texture:</label>
-            <select id="topTexture">
-                <option value="strataoak.jpg">Strata Oak MFC</option>
-                <option value="urbanmaple.jpg">Urban Maple MFC</option>
+            <label for="chairTexture">Choose Chair Texture:</label>
+            <select id="chairTexture">
+                <option value="texture1.jpg">texture 1</option>
+                <option value="texture2.jpg">texture 2</option>
             </select>
         </div>
         <div>
@@ -75,21 +75,21 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
-            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+            const ChairTopMaterial = materials.find(mat => mat.name === 'base_seat');
+            const ChairFrameMaterial = materials.find(mat => mat.name === 'leg_');
 
             const updateFrameColor = (color) => {
                 const rgb = hexToRgb(color);
-                if (deskFrameMaterial) {
-                    deskFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (ChairFrameMaterial) {
+                    ChairFrameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
                 }
             };
 
             document.getElementById('topColorPicker').addEventListener('input', (event) => {
                 const color = event.target.value;
                 const rgb = hexToRgb(color);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                if (ChairTopMaterial) {
+                    ChairTopMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
                 }
             });
 
@@ -98,11 +98,11 @@
                 updateFrameColor(color);
             });
 
-            document.getElementById('topTexture').addEventListener('change', async (event) => {
+            document.getElementById('chairTexture').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
                 const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/chair/textures/${textureUrl}`);
-                if (deskTopMaterial) {
-                    deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                if (ChairTopMaterial) {
+                    ChairTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
             });
 
