@@ -90,28 +90,28 @@
     </div>
 
     <script type="module">
-        const modelViewer = document.getElementById('modelViewer');
+        const modelViewer = document.getElementById("modelViewer");
 
         // Camera orbits for 8 predefined views
         const cameraOrbits = [
-            '0deg 80deg 2.77m',    // Front view
-            '45deg 80deg 2.77m',   // Front-Right corner view
-            '90deg 80deg 2.77m',   // Right view
-            '135deg 80deg 2.77m',  // Back-Right corner view
-            '180deg 80deg 2.77m',  // Back view
-            '225deg 80deg 2.77m',  // Back-Left corner view
-            '270deg 80deg 2.77m',  // Left view
-            '315deg 80deg 2.77m',  // Front-Left corner view
+            "0deg 80deg 2.77m",    // Front view
+            "45deg 80deg 2.77m",   // Front-Right corner view
+            "90deg 80deg 2.77m",   // Right view
+            "135deg 80deg 2.77m",  // Back-Right corner view
+            "180deg 80deg 2.77m",  // Back view
+            "225deg 80deg 2.77m",  // Back-Left corner view
+            "270deg 80deg 2.77m",  // Left view
+            "315deg 80deg 2.77m",  // Front-Left corner view
         ];
 
         let currentViewIndex = 0;
 
-        document.getElementById('nextViewButton').addEventListener('click', () => {
+        document.getElementById("nextViewButton").addEventListener("click", () => {
             currentViewIndex = (currentViewIndex + 1) % cameraOrbits.length;
             modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
         });
 
-        document.getElementById('prevViewButton').addEventListener('click', () => {
+        document.getElementById("prevViewButton").addEventListener("click", () => {
             currentViewIndex = (currentViewIndex - 1 + cameraOrbits.length) % cameraOrbits.length;
             modelViewer.cameraOrbit = cameraOrbits[currentViewIndex];
         });
@@ -125,8 +125,8 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            const deskTopMaterial = materials.find(mat => mat.name === 'DeskTopMaterial');
-            const deskFrameMaterial = materials.find(mat => mat.name === 'DeskFrameMaterials');
+            const deskTopMaterial = materials.find(mat => mat.name === "DeskTopMaterial");
+            const deskFrameMaterial = materials.find(mat => mat.name === "DeskFrameMaterials");
 
             const updateFrameColor = (color) => {
                 const rgb = hexToRgb(color);
@@ -135,7 +135,7 @@
                 }
             };
 
-            document.getElementById('topColorPicker').addEventListener('input', (event) => {
+            document.getElementById("topColorPicker").addEventListener("input", (event) => {
                 const color = event.target.value;
                 const rgb = hexToRgb(color);
                 if (deskTopMaterial) {
@@ -143,12 +143,12 @@
                 }
             });
 
-            document.getElementById('frameColorPicker').addEventListener('input', (event) => {
+            document.getElementById("frameColorPicker").addEventListener("input", (event) => {
                 const color = event.target.value;
                 updateFrameColor(color);
             });
 
-            document.getElementById('topTexture').addEventListener('change', async (event) => {
+            document.getElementById("topTexture").addEventListener("change", async (event) => {
                 const textureUrl = event.target.value;
                 const texture = await modelViewer.createTexture("https://sim3dn.github.io/3D/desk/textures/mfc/${textureUrl}");
                 if (deskTopMaterial) {
@@ -156,18 +156,18 @@
                 }
             });
 
-            document.getElementById('frameFinish').addEventListener('change', (event) => {
+            document.getElementById("frameFinish").addEventListener("change", (event) => {
                 const color = event.target.value;
-                document.getElementById('frameColorPicker').value = color; // Update the color picker value
+                document.getElementById("frameColorPicker").value = color; // Update the color picker value
                 updateFrameColor(color);
             });
 
             // Initialize the frame color to the default black
-            updateFrameColor('#000000');
+            updateFrameColor("#000000");
 
             // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
-                const bigint = parseInt(hex.replace('#', ''), 16);
+                const bigint = parseInt(hex.replace("#", ""), 16);
                 const r = (bigint >> 16) & 255;
                 const g = (bigint >> 8) & 255;
                 const b = (bigint & 255);
