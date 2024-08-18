@@ -150,7 +150,7 @@
 
             document.getElementById('topTexture').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
-                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/desk/textures/mfc/${textureUrl}`);
                 if (deskTopMaterial) {
                     deskTopMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
