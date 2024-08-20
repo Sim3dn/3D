@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer - Cell Pod</title>
+    <!-- Import the model-viewer component -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        model-viewer {
+            width: 100%;
+            height: 80%;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <model-viewer 
+    id="modelViewer"
+    src="https://sim3dn.github.io/3D/cellpod/Cell Pod 1.glb"
+    ar 
+    ar-modes="scene-viewer webxr quick-look"
+    camera-controls 
+    poster="https://sim3dn.github.io/3D/cellpod/poster.webp"
+    shadow-intensity="1"
+    shadow-softness="0.2" 
+    exposure="1" 
+    min-camera-orbit="auto 80deg auto" 
+    max-camera-orbit="auto 80deg auto" 
+    camera-orbit="-337.8deg 85deg 6m"
+    field-of-view="35deg"
+    auto-rotate
+    environment-image="neutral">
+</model-viewer>
+    
+    <div class="controls">
+        <div>
+            <label for="shellColorPicker">Choose Shell Color:</label>
+            <input type="color" id="shellColorPicker" value="#ffffff">
+        </div>
+        <div>
+            <label for="glassColorPicker">Choose Glass Color:</label>
+            <input type="color" id="glassColorPicker" value="#000000">
+        </div>
+        <div>
+            <label for="shellTexture">Choose Shell Texture:</label>
+            <select id="shellTexture">
+                <option value="strataoak.jpg">Strata Oak MFC</option>
+                <option value="urbanmaple.jpg">Urban Maple MFC</option>
+            </select>
+        </div>
+        <div>
+            <label for="glassFinish">Choose Glass Finish:</label>
+            <select id="glassFinish">
+                <option value="#000000">Black</option>
+                <option value="#ffffff">White</option>
+                <option value="#c0c0c0">Silver</option>
+            </select>
+        </div>
+        <div>
+            <input type="checkbox" id="toggleGlass" checked>
+            <label for="toggleGlass">Show Glass Panels</label>
+        </div>
+    </div>
+
+    <script type="module">
+        const modelViewer = document.getElementById('modelViewer');
+
+        modelViewer.addEventListener("load", () => {
+            const materials = modelViewer.model.materials;
+
+            // Adjust these names according to your GLB material names
+            const shellMaterial = materials.find(mat => mat.name === 'Hideaway-Black');
+            const glassMaterial = materials.find(mat => mat.name === 'Glass');
+
+            const updateGlassColor = (color) => {
+                const rgb = hexToRgb(color);
+                if (glassMaterial) {
+                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 0.3]); // 0.3 for transparency
+                }
+            };
+
+            document.getElementById('shellColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                const rgb = hexToRgb(color);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                }
+            });
+
+            document.getElementById('glassColorPicker').addEventListener('input', (event) => {
+                const color = event.target.value;
+                updateGlassColor(color);
+            });
+
+            document.getElementById('shellTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value;
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
+                if (shellMaterial) {
+                    shellMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
+            });
+
+            document.getElementById('glassFinish').addEventListener('change', (event) => {
+                const color = event.target.value;
+                document.getElementById('glassColorPicker').value = color; // Update the color picker value
+                updateGlassColor(color);
+            });
+
+            document.getElementById('toggleGlass').addEventListener('change', (event) => {
+                const isChecked = event.target.checked;
+                if (glassMaterial) {
+                    glassMaterial.visible = isChecked;
+                }
+            });
+
+            // Initialize the glass color to the default black
+            updateGlassColor('#000000');
+
+            // Helper function to convert hex color to RGB
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.replace('#', ''), 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = (bigint & 255);
+                return { r, g, b };
+            }
+        });
+    </script>
+</body>
+</html>
