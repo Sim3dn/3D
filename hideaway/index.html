@@ -59,13 +59,13 @@
         <div>
             <label for="frameColor">Choose Frame Color:</label>
             <select id="frameColor">
-                <option value="rgb(255, 255, 255)">White</option>
-                <option value="rgb(228, 228, 228)">Silk Grey</option>
-                <option value="rgb(26, 23, 24)">Black</option>
-                <option value="rgb(63, 53, 37)">Putty</option>
-                <option value="rgb(239, 166, 11)">Traffic Yellow</option>
-                <option value="rgb(12, 49, 62)">Ocean Blue</option>
-                <option value="rgb(43, 53, 29)">Forest</option>
+                <option value="white">White</option>
+                <option value="silkGrey">Silk Grey</option>
+                <option value="black">Black</option>
+                <option value="putty">Putty</option>
+                <option value="trafficYellow">Traffic Yellow</option>
+                <option value="oceanBlue">Ocean Blue</option>
+                <option value="forest">Forest</option>
             </select>
         </div>
 
@@ -73,13 +73,13 @@
         <div>
             <label for="sidePanelTexture">Choose Side Panel Texture:</label>
             <select id="sidePanelTexture">
-                <option value="White">White</option>
-                <option value="Silk Grey">Silk Grey</option>
-                <option value="Black">Black</option>
-                <option value="Putty">Putty</option>
-                <option value="Traffic Yellow">Traffic Yellow</option>
-                <option value="Ocean Blue">Ocean Blue</option>
-                <option value="Forest">Forest</option>
+                <option value="white">White</option>
+                <option value="silkGrey">Silk Grey</option>
+                <option value="black">Black</option>
+                <option value="putty">Putty</option>
+                <option value="trafficYellow">Traffic Yellow</option>
+                <option value="oceanBlue">Ocean Blue</option>
+                <option value="forest">Forest</option>
                 <option value="cariniwalnut.jpg">Carini Walnut MFC</option>
                 <option value="urbanmaple.jpg">Urban Maple MFC</option>
                 <option value="strataoak.jpg">Strata Oak MFC</option>
@@ -100,11 +100,9 @@
         <div>
             <label for="fabricUpholstery">Choose Fabric Upholstery:</label>
             <select id="fabricUpholstery">
-                <!-- These should be populated dynamically or updated with the Camira fabrics -->
                 <option value="lightblue">Light Blue</option>
                 <option value="darkgrey">Dark Grey</option>
                 <option value="red">Red</option>
-                <!-- Add more options as necessary -->
             </select>
         </div>
 
@@ -117,6 +115,17 @@
 
     <script type="module">
         const modelViewer = document.getElementById('modelViewer');
+
+        // Define color constants in JavaScript
+        const colors = {
+            white: [255, 255, 255],
+            silkGrey: [228, 228, 228],
+            black: [26, 23, 24],
+            putty: [63, 53, 37],
+            trafficYellow: [239, 166, 11],
+            oceanBlue: [12, 49, 62],
+            forest: [43, 53, 29]
+        };
 
         // Event listeners for updating the model and materials
         document.getElementById('podModel').addEventListener('change', (event) => {
@@ -145,8 +154,8 @@
 
             // Update frame color
             document.getElementById('frameColor').addEventListener('change', (event) => {
-                const color = event.target.value;
-                const rgb = color.match(/\d+/g).map(Number);
+                const colorName = event.target.value;
+                const rgb = colors[colorName];
                 if (frameMaterial) {
                     frameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1]);
                 }
@@ -181,7 +190,7 @@
             // Toggle internal light
             document.getElementById('toggleLight').addEventListener('change', (event) => {
                 if (lightMaterial) {
-                    lightMaterial.emissiveIntensity = event.target.checked ? 1 : 0; // Turn light on or off
+                    lightMaterial.emissiveIntensity = event.target.checked ? 0 : 1; // Turn light on or off
                 }
             });
         });
