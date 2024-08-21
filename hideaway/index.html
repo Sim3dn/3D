@@ -38,7 +38,7 @@
 <body>
     <model-viewer id="modelViewer" src="https://sim3dn.github.io/3D/hideaway/singlepod.glb" ar ar-modes="scene-viewer webxr quick-look"
         camera-controls poster="https://sim3dn.github.io/3D/hideaway/poster.webp" shadow-intensity="1" shadow-softness="0.2" exposure="1"
-        min-camera-orbit="auto 80deg auto" max-camera-orbit="auto 80deg auto" camera-orbit="-337.8deg 85deg 6m" field-of-view="35deg"
+        min-camera-orbit="auto 70deg auto" max-camera-orbit="auto 110deg auto" camera-orbit="-335deg 85deg 7m" field-of-view="40deg"
         auto-rotate environment-image="neutral">
     </model-viewer>
 
@@ -127,7 +127,6 @@
             forest: [43, 53, 29]
         };
 
-        // Event listeners for updating the model and materials
         document.getElementById('podModel').addEventListener('change', (event) => {
             const model = event.target.value;
             modelViewer.src = `https://sim3dn.github.io/3D/hideaway/${model}`;
@@ -136,7 +135,6 @@
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            // Assign materials to variables
             const frameMaterial = materials.find(mat => mat.name === 'frame');
             const sidePanelMaterial = materials.find(mat => mat.name === 'sidepanel');
             const floorMaterial = materials.find(mat => mat.name === 'floor');
@@ -150,9 +148,8 @@
                     glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]); // Mostly transparent
                 }
             };
-            setGlassTransparent(); // Initial call to set transparency
+            setGlassTransparent();
 
-            // Update frame color
             document.getElementById('frameColor').addEventListener('change', (event) => {
                 const colorName = event.target.value;
                 const rgb = colors[colorName];
@@ -161,16 +158,23 @@
                 }
             });
 
-            // Update side panel texture
             document.getElementById('sidePanelTexture').addEventListener('change', async (event) => {
-                const textureUrl = event.target.value.endsWith('.jpg') ? event.target.value : `${event.target.value}.jpg`;
-                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/hideaway/textures/sidepanels/${textureUrl}`);
-                if (sidePanelMaterial) {
-                    sidePanelMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                const value = event.target.value;
+                if (value.endsWith('.jpg')) {
+                    const textureUrl = value;
+                    const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/hideaway/textures/sidepanels/${textureUrl}`);
+                    if (sidePanelMaterial) {
+                        sidePanelMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                    }
+                } else {
+                    const rgb = colors[value];
+                    if (sidePanelMaterial) {
+                        sidePanelMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1]);
+                        sidePanelMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(null); // Remove texture
+                    }
                 }
             });
 
-            // Update floor material
             document.getElementById('floorMaterial').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
                 const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/hideaway/textures/floors/${textureUrl}`);
@@ -179,7 +183,6 @@
                 }
             });
 
-            // Update fabric upholstery
             document.getElementById('fabricUpholstery').addEventListener('change', async (event) => {
                 const color = event.target.value;
                 if (fabricMaterial) {
@@ -187,7 +190,6 @@
                 }
             });
 
-            // Toggle internal light
             document.getElementById('toggleLight').addEventListener('change', (event) => {
                 if (lightMaterial) {
                     lightMaterial.emissiveIntensity = event.target.checked ? 0 : 1; // Turn light on or off
