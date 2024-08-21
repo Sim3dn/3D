@@ -140,15 +140,17 @@
             const floorMaterial = materials.find(mat => mat.name === 'floor');
             const fabricMaterial = materials.find(mat => mat.name === 'fabricpanels');
             const lightMaterial = materials.find(mat => mat.name === 'internallight');
-            const glassMaterial = materials.find(mat => mat.name === 'Glass');
+            const glassMaterial = materials.find(mat => mat.name === 'Glass');  // Ensure the name matches your model
 
-            // Ensure glass material is always transparent
-            const setGlassTransparent = () => {
+            // Ensure glass material is always transparent with glass-like properties
+            const setGlassProperties = () => {
                 if (glassMaterial) {
-                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]); // Mostly transparent
+                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]); // Base color with transparency (0.1 alpha)
+                    glassMaterial.pbrMetallicRoughness.metallicFactor = 0.9;  // High reflectivity like glass
+                    glassMaterial.pbrMetallicRoughness.roughnessFactor = 0.1; // Low roughness for a smooth, shiny surface
                 }
             };
-            setGlassTransparent();
+            setGlassProperties();
 
             document.getElementById('frameColor').addEventListener('change', (event) => {
                 const colorName = event.target.value;
