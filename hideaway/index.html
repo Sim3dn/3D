@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Viewer - Cell Pod</title>
+    <title>3D Model Viewer - Hideaway Pods</title>
     <!-- Import the model-viewer component -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
@@ -16,127 +17,175 @@
             margin: 0;
             background-color: #f0f0f0;
         }
+
         model-viewer {
             width: 100%;
             height: 80%;
         }
+
         .controls {
             margin-top: 20px;
         }
+
+        select,
+        input[type="color"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
     </style>
 </head>
+
 <body>
-    <model-viewer 
-    id="modelViewer"
-    src="https://sim3dn.github.io/3D/cellpod/Cell Pod 1.glb"
-    ar 
-    ar-modes="scene-viewer webxr quick-look"
-    camera-controls 
-    poster="https://sim3dn.github.io/3D/cellpod/poster.webp"
-    shadow-intensity="1"
-    shadow-softness="0.2" 
-    exposure="1" 
-    min-camera-orbit="auto 80deg auto" 
-    max-camera-orbit="auto 80deg auto" 
-    camera-orbit="-337.8deg 85deg 6m"
-    field-of-view="35deg"
-    auto-rotate
-    environment-image="neutral">
-</model-viewer>
-    
+    <model-viewer id="modelViewer" src="https://sim3dn.github.io/3D/hideaway/singlepod.glb" ar ar-modes="scene-viewer webxr quick-look"
+        camera-controls poster="https://sim3dn.github.io/3D/hideaway/poster.webp" shadow-intensity="1" shadow-softness="0.2" exposure="1"
+        min-camera-orbit="auto 80deg auto" max-camera-orbit="auto 80deg auto" camera-orbit="-337.8deg 85deg 6m" field-of-view="35deg"
+        auto-rotate environment-image="neutral">
+    </model-viewer>
+
     <div class="controls">
+        <!-- Pod Model Selection -->
         <div>
-            <label for="shellColorPicker">Choose Shell Color:</label>
-            <input type="color" id="shellColorPicker" value="#ffffff">
+            <label for="podModel">Choose Pod Model:</label>
+            <select id="podModel">
+                <option value="singlepod.glb">Single Pod</option>
+                <option value="hybridpod.glb">Hybrid Pod</option>
+                <option value="2personpod.glb">2 Person Pod</option>
+                <option value="4personpod.glb">4 Person Pod</option>
+                <option value="6personpod.glb">6 Person Pod</option>
+            </select>
         </div>
+
+        <!-- Frame Color Picker -->
         <div>
-            <label for="glassColorPicker">Choose Glass Color:</label>
-            <input type="color" id="glassColorPicker" value="#000000">
+            <label for="frameColor">Choose Frame Color:</label>
+            <select id="frameColor">
+                <option value="rgb(255, 255, 255)">White</option>
+                <option value="rgb(228, 228, 228)">Silk Grey</option>
+                <option value="rgb(26, 23, 24)">Black</option>
+                <option value="rgb(63, 53, 37)">Putty</option>
+                <option value="rgb(239, 166, 11)">Traffic Yellow</option>
+                <option value="rgb(12, 49, 62)">Ocean Blue</option>
+                <option value="rgb(43, 53, 29)">Forest</option>
+            </select>
         </div>
+
+        <!-- Side Panel Texture Picker -->
         <div>
-            <label for="shellTexture">Choose Shell Texture:</label>
-            <select id="shellTexture">
-                <option value="strataoak.jpg">Strata Oak MFC</option>
+            <label for="sidePanelTexture">Choose Side Panel Texture:</label>
+            <select id="sidePanelTexture">
+                <option value="White">White</option>
+                <option value="Silk Grey">Silk Grey</option>
+                <option value="Black">Black</option>
+                <option value="Putty">Putty</option>
+                <option value="Traffic Yellow">Traffic Yellow</option>
+                <option value="Ocean Blue">Ocean Blue</option>
+                <option value="Forest">Forest</option>
+                <option value="cariniwalnut.jpg">Carini Walnut MFC</option>
                 <option value="urbanmaple.jpg">Urban Maple MFC</option>
+                <option value="strataoak.jpg">Strata Oak MFC</option>
+                <option value="whiteboard.jpg">Whiteboard</option>
             </select>
         </div>
+
+        <!-- Floor Material Picker -->
         <div>
-            <label for="glassFinish">Choose Glass Finish:</label>
-            <select id="glassFinish">
-                <option value="#000000">Black</option>
-                <option value="#ffffff">White</option>
-                <option value="#c0c0c0">Silver</option>
+            <label for="floorMaterial">Choose Floor Material:</label>
+            <select id="floorMaterial">
+                <option value="darkdansk.jpg">Dark Dansk</option>
+                <option value="spiritland.jpg">Spiritland</option>
             </select>
         </div>
+
+        <!-- Fabric Upholstery Picker -->
         <div>
-            <input type="checkbox" id="toggleGlass" checked>
-            <label for="toggleGlass">Show Glass Panels</label>
+            <label for="fabricUpholstery">Choose Fabric Upholstery:</label>
+            <select id="fabricUpholstery">
+                <!-- These should be populated dynamically or updated with the Camira fabrics -->
+                <option value="lightblue">Light Blue</option>
+                <option value="darkgrey">Dark Grey</option>
+                <option value="red">Red</option>
+                <!-- Add more options as necessary -->
+            </select>
+        </div>
+
+        <!-- Light Toggle -->
+        <div>
+            <input type="checkbox" id="toggleLight">
+            <label for="toggleLight">Toggle Internal Light</label>
         </div>
     </div>
 
     <script type="module">
         const modelViewer = document.getElementById('modelViewer');
 
+        // Event listeners for updating the model and materials
+        document.getElementById('podModel').addEventListener('change', (event) => {
+            const model = event.target.value;
+            modelViewer.src = `https://sim3dn.github.io/3D/hideaway/${model}`;
+        });
+
         modelViewer.addEventListener("load", () => {
             const materials = modelViewer.model.materials;
 
-            // Adjust these names according to your GLB material names
-            const shellMaterial = materials.find(mat => mat.name === 'Hideaway-Black');
+            // Assign materials to variables
+            const frameMaterial = materials.find(mat => mat.name === 'frame');
+            const sidePanelMaterial = materials.find(mat => mat.name === 'sidepanel');
+            const floorMaterial = materials.find(mat => mat.name === 'floor');
+            const fabricMaterial = materials.find(mat => mat.name === 'fabricpanels');
+            const lightMaterial = materials.find(mat => mat.name === 'internallight');
             const glassMaterial = materials.find(mat => mat.name === 'Glass');
 
-            const updateGlassColor = (color) => {
-                const rgb = hexToRgb(color);
+            // Ensure glass material is always transparent
+            const setGlassTransparent = () => {
                 if (glassMaterial) {
-                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 0.3]); // 0.3 for transparency
+                    glassMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 0.1]); // Mostly transparent
                 }
             };
+            setGlassTransparent(); // Initial call to set transparency
 
-            document.getElementById('shellColorPicker').addEventListener('input', (event) => {
+            // Update frame color
+            document.getElementById('frameColor').addEventListener('change', (event) => {
                 const color = event.target.value;
-                const rgb = hexToRgb(color);
-                if (shellMaterial) {
-                    shellMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb.r / 255, rgb.g / 255, rgb.b / 255, 1]);
+                const rgb = color.match(/\d+/g).map(Number);
+                if (frameMaterial) {
+                    frameMaterial.pbrMetallicRoughness.setBaseColorFactor([rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1]);
                 }
             });
 
-            document.getElementById('glassColorPicker').addEventListener('input', (event) => {
-                const color = event.target.value;
-                updateGlassColor(color);
+            // Update side panel texture
+            document.getElementById('sidePanelTexture').addEventListener('change', async (event) => {
+                const textureUrl = event.target.value.endsWith('.jpg') ? event.target.value : `${event.target.value}.jpg`;
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/hideaway/textures/sidepanels/${textureUrl}`);
+                if (sidePanelMaterial) {
+                    sidePanelMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                }
             });
 
-            document.getElementById('shellTexture').addEventListener('change', async (event) => {
+            // Update floor material
+            document.getElementById('floorMaterial').addEventListener('change', async (event) => {
                 const textureUrl = event.target.value;
-                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/textures/mfc/${textureUrl}`);
-                if (shellMaterial) {
-                    shellMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+                const texture = await modelViewer.createTexture(`https://sim3dn.github.io/3D/hideaway/textures/floors/${textureUrl}`);
+                if (floorMaterial) {
+                    floorMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
                 }
             });
 
-            document.getElementById('glassFinish').addEventListener('change', (event) => {
+            // Update fabric upholstery
+            document.getElementById('fabricUpholstery').addEventListener('change', async (event) => {
                 const color = event.target.value;
-                document.getElementById('glassColorPicker').value = color; // Update the color picker value
-                updateGlassColor(color);
-            });
-
-            document.getElementById('toggleGlass').addEventListener('change', (event) => {
-                const isChecked = event.target.checked;
-                if (glassMaterial) {
-                    glassMaterial.visible = isChecked;
+                if (fabricMaterial) {
+                    fabricMaterial.pbrMetallicRoughness.setBaseColorFactor(color);
                 }
             });
 
-            // Initialize the glass color to the default black
-            updateGlassColor('#000000');
-
-            // Helper function to convert hex color to RGB
-            function hexToRgb(hex) {
-                const bigint = parseInt(hex.replace('#', ''), 16);
-                const r = (bigint >> 16) & 255;
-                const g = (bigint >> 8) & 255;
-                const b = (bigint & 255);
-                return { r, g, b };
-            }
+            // Toggle internal light
+            document.getElementById('toggleLight').addEventListener('change', (event) => {
+                if (lightMaterial) {
+                    lightMaterial.emissiveIntensity = event.target.checked ? 1 : 0; // Turn light on or off
+                }
+            });
         });
     </script>
 </body>
+
 </html>
